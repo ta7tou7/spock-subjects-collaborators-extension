@@ -37,18 +37,10 @@ class FieldRetriever {
 			if (injectionCandidateByNameAndType) {
 				matchingFields[injectionCandidateByNameAndType] = injectionCandidate
 			}
-            else if(matchingTypes.size() > 1) {
-                List<Field> nonUnSetMatchingTypes = matchingTypes.findAll { it.get(subject) == null }  
-                if(nonUnSetMatchingTypes.isEmpty()) {
-                    matchingFields = matchingFields << matchingTypes.collectEntries { [(it) : injectionCandidate] }
-                }
-                else {
-                    matchingFields = matchingFields << nonUnSetMatchingTypes.collectEntries { [(it) : injectionCandidate] }
-                }
+            else {
+                List<Field> nullMatchingTypes = matchingTypes.findAll { it.get(subject) == null }
+                matchingFields = matchingFields << nullMatchingTypes.collectEntries { [(it) : injectionCandidate] }
             }
-             else {
-				matchingFields = matchingFields << matchingTypes.collectEntries { [(it) : injectionCandidate] }
-			}
 		}
 		return matchingFields
 	}
