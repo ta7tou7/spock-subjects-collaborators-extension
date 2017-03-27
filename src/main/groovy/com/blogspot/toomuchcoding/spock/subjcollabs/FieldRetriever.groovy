@@ -5,8 +5,6 @@ import org.codehaus.groovy.reflection.ClassInfo
 import org.spockframework.runtime.model.FieldInfo
 
 import java.lang.reflect.Field
-import java.lang.reflect.Modifier
-import static java.lang.reflect.Modifier.isFinal
 
 @PackageScope
 class FieldRetriever {
@@ -21,7 +19,7 @@ class FieldRetriever {
 	}
 
 	private List<Field> getAllFieldsFromSubject(Class type, List<Field> fields) {
-		fields.addAll(type.declaredFields.findAll { Field field -> !field.isSynthetic() && !isFinal(field.getModifiers()) && field.type != ClassInfo })
+		fields.addAll(type.declaredFields.findAll { Field field -> !field.isSynthetic() && field.type != ClassInfo })
 		if (type.superclass != null) {
 			fields.addAll(getAllFieldsFromSubject(type.superclass, fields))
 		}
@@ -37,10 +35,10 @@ class FieldRetriever {
 			if (injectionCandidateByNameAndType) {
 				matchingFields[injectionCandidateByNameAndType] = injectionCandidate
 			}
-            else {
-                List<Field> nullMatchingTypes = matchingTypes.findAll { it.get(subject) == null }
-                matchingFields = matchingFields << nullMatchingTypes.collectEntries { [(it) : injectionCandidate] }
-            }
+                        else {
+                                List<Field> nullMatchingTypes = matchingTypes.findAll { it.get(subject) == null }
+                                matchingFields = matchingFields << nullMatchingTypes.collectEntries { [(it) : injectionCandidate] }
+                        }
 		}
 		return matchingFields
 	}
